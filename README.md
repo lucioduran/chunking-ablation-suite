@@ -111,7 +111,24 @@ floating-point rankings and timings; report those as new runs.
 
 ## Results
 
-The measured results and interpretation are recorded in [results analysis](docs/results.md).
+Actual local evaluation on Intel Xeon W-3223, two CPU threads, 36 held-out queries:
+
+| Configuration | Complete evidence@3 | Chunks |
+| --- | ---: | ---: |
+| Fixed, 64 words | 21/36 | 78 |
+| Fixed, 96 words | 31/36 | 54 |
+| Structure, 64 words | 12/36 | 96 |
+| Structure, 96 words | 33/36 | 84 |
+| Semantic, 64 words | 12/36 | 96 |
+| Semantic, 96 words | 12/36 | 68 |
+| Fixed, 64 words, overlap 16 | 32/36 | 90 |
+| Semantic, 64 words, threshold 0.7 | 12/36 | 96 |
+
+The threshold ablation is null because no adjacent pair fits the 64-word budget.
+At 96 words, neural boundaries change the index but do not improve complete
+retrieval on evaluation queries. These outcomes do not establish a general winner.
+Per-type quality, measured construction times, vector payload, and all contrasts
+are recorded in [results analysis](docs/results.md).
 Raw evidence is preserved in [development](results/dev/report.json) and
 [evaluation](results/eval/report.json), with human-readable summaries alongside.
 

@@ -1,3 +1,4 @@
+import json
 import re
 import subprocess
 import sys
@@ -44,3 +45,21 @@ class RepositoryTests(unittest.TestCase):
         )
         self.assertEqual(result.returncode, 0)
         self.assertIn("verify", result.stdout)
+
+    def test_published_exports_match_reports(self):
+        from scripts.render_results import render
+
+        for split in ("dev", "eval"):
+            report = json.loads(Path(f"results/{split}/report.json").read_text(encoding="utf-8"))
+            summary = json.loads(Path(f"results/{split}/summary.json").read_text(encoding="utf-8"))
+            self.assertEqual(
+                summary["summaries"], {r["config"]["id"]: r["summary"] for r in report["runs"]}
+            )
+            self.assertEqual(
+                summary["costs"], {r["config"]["id"]: r["costs"] for r in report["runs"]}
+            )
+            self.assertEqual(summary["contrasts"], report["contrasts"])
+            if split == "eval":
+                self.assertEqual(
+                    Path("docs/results.md").read_text(encoding="utf-8"), render(report)
+                )

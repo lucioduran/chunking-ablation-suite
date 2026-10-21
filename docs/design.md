@@ -65,6 +65,7 @@ order can affect timings. No paid inference or GPU is used.
 
 Stored vectors, chunks, rankings, inputs, and summaries permit standard-library
 replay. Replay establishes internal consistency, not authentic inference or timing.
-Hash provenance identifies exact bytes; it is not a signature. CI uses saved
+The data hash identifies canonical JSON content, not original file whitespace.
+Model hashes identify exact file bytes. Neither is a signature. CI uses saved
 vectors and does not download or execute neural models. Real inference is evidenced
 by the local experiment, which records its environment and model file hashes.
