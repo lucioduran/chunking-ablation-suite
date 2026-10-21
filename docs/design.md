@@ -41,7 +41,9 @@ Rank every chunk in the complete library by cosine similarity, ties by chunk ID.
 Use the same top-three cutoff for all configurations. Each query identifies one
 source document and one or more minimal literal answer-evidence spans. A span is
 recalled only if its full character interval is covered by the union of retrieved
-chunks from that document. Whitespace gaps count as gaps. Evidence recall is the
+chunks from that document. Fixed windows retain trailing inter-word whitespace so adjacent windows can
+recover an evidence span jointly. Gaps between atomic blocks only contain
+separator newlines; annotations never include these separators. Evidence recall is the
 fraction of spans covered. Complete@3 requires all spans. Completion reciprocal
 rank is the reciprocal of the first prefix with complete evidence, or zero. It is
 not conventional first-relevant-document MRR. Report macro averages by source kind

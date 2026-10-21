@@ -132,7 +132,12 @@ def chunk(doc: dict, config: dict, vectors: list[list[float]]) -> list[dict]:
     if method == "fixed":
         for i in range(0, len(words), size - overlap):
             end = min(i + size, len(words))
-            ranges.append((words[i].start(), words[end - 1].end()))
+            ranges.append(
+                (
+                    0 if i == 0 else words[i].start(),
+                    words[end].start() if end < len(words) else len(text),
+                )
+            )
             if end == len(words):
                 break
     else:

@@ -72,11 +72,11 @@ class CoreTests(unittest.TestCase):
 
     def test_fixed_offsets_and_overlap(self):
         result = chunk(self.doc, self.config, [])
-        self.assertEqual([c["text"] for c in result], ["one two\n\nthree", "four\n\nfive six"])
+        self.assertEqual([c["text"] for c in result], ["one two\n\nthree ", "four\n\nfive six"])
         self.config["overlap"] = 1
         result = chunk(self.doc, self.config, [])
         self.assertEqual(
-            [c["text"] for c in result], ["one two\n\nthree", "three four\n\nfive", "five six"]
+            [c["text"] for c in result], ["one two\n\nthree ", "three four\n\nfive ", "five six"]
         )
         text = document_text(self.doc)
         self.assertTrue(all(text[c["start"] : c["end"]] == c["text"] for c in result))
