@@ -1,0 +1,1261 @@
+{
+  "version": 1,
+  "documents": [
+    {
+      "id": "aster-code",
+      "kind": "code",
+      "split": "dev",
+      "blocks": [
+        {
+          "section": "overview",
+          "text": "# Aster pump: code reference\nThis fictional manual covers the Aster station pump. Operators distinguish the live pressure reading from the test reading. Test readings never authorize a live restart. Keep the maintenance log with the device serial number and record the current shift before changing settings."
+        },
+        {
+          "section": "startup",
+          "text": "## Starting the Aster controller\nThe controller checks pressure before enabling the pump. The maintenance branch returns a diagnostic result without activating hardware. A missing reading is a hard failure. Callers must handle the exception and must not replace a missing reading with zero. This distinction matters during startup."
+        },
+        {
+          "section": "startup",
+          "text": "```python\ndef start_pump(reading, maintenance=False):\n    if reading is None:\n        raise ValueError('missing reading')\n    if maintenance:\n        return 'diagnostic-only'\n    if reading > 18:\n        return 'blocked'\n    return 'start-amber'\n```"
+        },
+        {
+          "section": "retries",
+          "text": "## Retry policy\nThe Aster pump startup caller waits 45 seconds after a blocked attempt. A diagnostic-only result is not a blocked attempt. Retries require a new reading; cached readings cannot be reused. The retry counter is reset only after a successful live start, never after a diagnostic run."
+        },
+        {
+          "section": "closing",
+          "text": "## Contact\nFor an unreadable Aster label, stop the pump and contact the station desk. This document contains fictional operational information for retrieval experiments only. It is not an engineering procedure for real equipment."
+        }
+      ]
+    },
+    {
+      "id": "aster-table",
+      "kind": "table",
+      "split": "dev",
+      "blocks": [
+        {
+          "section": "overview",
+          "text": "# Aster pump: table reference\nThis fictional manual covers the Aster station pump. Operators distinguish the live pressure reading from the test reading. Test readings never authorize a live restart. Keep the maintenance log with the device serial number and record the current shift before changing settings."
+        },
+        {
+          "section": "limits",
+          "text": "## Aster limits\nUse the active-mode row for the live pump. The standby row applies only after shutdown. The inspection row is used during supervised maintenance and does not authorize production. Each row specifies its own maximum reading, wait duration, and required permit. Never combine cells from different rows."
+        },
+        {
+          "section": "limits",
+          "text": "| Mode | Maximum reading | Wait seconds | Permit |\n| --- | ---: | ---: | --- |\n| active | 18 | 45 | amber |\n| standby | 25 | 60 | white |\n| inspection | 29 | 75 | black |"
+        },
+        {
+          "section": "exceptions",
+          "text": "## Expired permits\nAn expired amber permit invalidates the active row for the Aster pump. Renew it at the station desk before retrying. Standby limits remain valid while renewal is pending. The desk cannot waive the active maximum; approval restores permission but never changes the table values."
+        },
+        {
+          "section": "closing",
+          "text": "## Contact\nFor an unreadable Aster label, stop the pump and contact the station desk. This document contains fictional operational information for retrieval experiments only. It is not an engineering procedure for real equipment."
+        }
+      ]
+    },
+    {
+      "id": "aster-cross_reference",
+      "kind": "cross_reference",
+      "split": "dev",
+      "blocks": [
+        {
+          "section": "overview",
+          "text": "# Aster pump: cross reference reference\nThis fictional manual covers the Aster station pump. Operators distinguish the live pressure reading from the test reading. Test readings never authorize a live restart. Keep the maintenance log with the device serial number and record the current shift before changing settings."
+        },
+        {
+          "section": "release",
+          "text": "## Release procedure R-Aster\nRelease of the Aster pump requires the amber permit defined in section P-Aster. The release operator must also complete the waiting rule in section W-Aster. A signature on the shift log records completion; it does not replace either prerequisite. Training releases follow a separate procedure and cannot authorize a live device."
+        },
+        {
+          "section": "unrelated",
+          "text": "## Archive retention\nArchive completed shift logs for fourteen days in the local cabinet. Copy only the serial number into the central index. The archive clerk checks page counts at the end of each shift. Missing pages require an incident note, but the archive process cannot issue permits or change device waiting rules."
+        },
+        {
+          "section": "permit",
+          "text": "## P-Aster: Permit definition\nThe amber permit requires two signatures: the operator and the duty engineer. This permit applies to the Aster pump only. A training supervisor cannot substitute for the duty engineer. Both signatures must be dated during the current shift. An older signed permit expires at shift handover."
+        },
+        {
+          "section": "wait",
+          "text": "## W-Aster: Waiting rule\nWait 45 seconds after the pressure falls below 18 before release. Restart the timer whenever the reading rises above the limit. The operator records the final uninterrupted interval in the shift log. The timer is a prerequisite separate from the permit signatures."
+        },
+        {
+          "section": "closing",
+          "text": "## Contact\nFor an unreadable Aster label, stop the pump and contact the station desk. This document contains fictional operational information for retrieval experiments only. It is not an engineering procedure for real equipment."
+        }
+      ]
+    },
+    {
+      "id": "birch-code",
+      "kind": "code",
+      "split": "dev",
+      "blocks": [
+        {
+          "section": "overview",
+          "text": "# Birch relay: code reference\nThis fictional manual covers the Birch station relay. Operators distinguish the live voltage reading from the test reading. Test readings never authorize a live restart. Keep the maintenance log with the device serial number and record the current shift before changing settings."
+        },
+        {
+          "section": "startup",
+          "text": "## Starting the Birch controller\nThe controller checks voltage before enabling the relay. The maintenance branch returns a diagnostic result without activating hardware. A missing reading is a hard failure. Callers must handle the exception and must not replace a missing reading with zero. This distinction matters during startup."
+        },
+        {
+          "section": "startup",
+          "text": "```python\ndef start_relay(reading, maintenance=False):\n    if reading is None:\n        raise ValueError('missing reading')\n    if maintenance:\n        return 'diagnostic-only'\n    if reading > 24:\n        return 'blocked'\n    return 'start-violet'\n```"
+        },
+        {
+          "section": "retries",
+          "text": "## Retry policy\nThe Birch relay startup caller waits 60 seconds after a blocked attempt. A diagnostic-only result is not a blocked attempt. Retries require a new reading; cached readings cannot be reused. The retry counter is reset only after a successful live start, never after a diagnostic run."
+        },
+        {
+          "section": "closing",
+          "text": "## Contact\nFor an unreadable Birch label, stop the relay and contact the station desk. This document contains fictional operational information for retrieval experiments only. It is not an engineering procedure for real equipment."
+        }
+      ]
+    },
+    {
+      "id": "birch-table",
+      "kind": "table",
+      "split": "dev",
+      "blocks": [
+        {
+          "section": "overview",
+          "text": "# Birch relay: table reference\nThis fictional manual covers the Birch station relay. Operators distinguish the live voltage reading from the test reading. Test readings never authorize a live restart. Keep the maintenance log with the device serial number and record the current shift before changing settings."
+        },
+        {
+          "section": "limits",
+          "text": "## Birch limits\nUse the active-mode row for the live relay. The standby row applies only after shutdown. The inspection row is used during supervised maintenance and does not authorize production. Each row specifies its own maximum reading, wait duration, and required permit. Never combine cells from different rows."
+        },
+        {
+          "section": "limits",
+          "text": "| Mode | Maximum reading | Wait seconds | Permit |\n| --- | ---: | ---: | --- |\n| active | 24 | 60 | violet |\n| standby | 31 | 75 | white |\n| inspection | 35 | 90 | black |"
+        },
+        {
+          "section": "exceptions",
+          "text": "## Expired permits\nAn expired violet permit invalidates the active row for the Birch relay. Renew it at the station desk before retrying. Standby limits remain valid while renewal is pending. The desk cannot waive the active maximum; approval restores permission but never changes the table values."
+        },
+        {
+          "section": "closing",
+          "text": "## Contact\nFor an unreadable Birch label, stop the relay and contact the station desk. This document contains fictional operational information for retrieval experiments only. It is not an engineering procedure for real equipment."
+        }
+      ]
+    },
+    {
+      "id": "birch-cross_reference",
+      "kind": "cross_reference",
+      "split": "dev",
+      "blocks": [
+        {
+          "section": "overview",
+          "text": "# Birch relay: cross reference reference\nThis fictional manual covers the Birch station relay. Operators distinguish the live voltage reading from the test reading. Test readings never authorize a live restart. Keep the maintenance log with the device serial number and record the current shift before changing settings."
+        },
+        {
+          "section": "release",
+          "text": "## Release procedure R-Birch\nRelease of the Birch relay requires the violet permit defined in section P-Birch. The release operator must also complete the waiting rule in section W-Birch. A signature on the shift log records completion; it does not replace either prerequisite. Training releases follow a separate procedure and cannot authorize a live device."
+        },
+        {
+          "section": "unrelated",
+          "text": "## Archive retention\nArchive completed shift logs for fourteen days in the local cabinet. Copy only the serial number into the central index. The archive clerk checks page counts at the end of each shift. Missing pages require an incident note, but the archive process cannot issue permits or change device waiting rules."
+        },
+        {
+          "section": "permit",
+          "text": "## P-Birch: Permit definition\nThe violet permit requires two signatures: the operator and the duty engineer. This permit applies to the Birch relay only. A training supervisor cannot substitute for the duty engineer. Both signatures must be dated during the current shift. An older signed permit expires at shift handover."
+        },
+        {
+          "section": "wait",
+          "text": "## W-Birch: Waiting rule\nWait 60 seconds after the voltage falls below 24 before release. Restart the timer whenever the reading rises above the limit. The operator records the final uninterrupted interval in the shift log. The timer is a prerequisite separate from the permit signatures."
+        },
+        {
+          "section": "closing",
+          "text": "## Contact\nFor an unreadable Birch label, stop the relay and contact the station desk. This document contains fictional operational information for retrieval experiments only. It is not an engineering procedure for real equipment."
+        }
+      ]
+    },
+    {
+      "id": "cobalt-code",
+      "kind": "code",
+      "split": "eval",
+      "blocks": [
+        {
+          "section": "overview",
+          "text": "# Cobalt cooler: code reference\nThis fictional manual covers the Cobalt station cooler. Operators distinguish the live temperature reading from the test reading. Test readings never authorize a live restart. Keep the maintenance log with the device serial number and record the current shift before changing settings."
+        },
+        {
+          "section": "startup",
+          "text": "## Starting the Cobalt controller\nThe controller checks temperature before enabling the cooler. The maintenance branch returns a diagnostic result without activating hardware. A missing reading is a hard failure. Callers must handle the exception and must not replace a missing reading with zero. This distinction matters during startup."
+        },
+        {
+          "section": "startup",
+          "text": "```python\ndef start_cooler(reading, maintenance=False):\n    if reading is None:\n        raise ValueError('missing reading')\n    if maintenance:\n        return 'diagnostic-only'\n    if reading > 12:\n        return 'blocked'\n    return 'start-silver'\n```"
+        },
+        {
+          "section": "retries",
+          "text": "## Retry policy\nThe Cobalt cooler startup caller waits 90 seconds after a blocked attempt. A diagnostic-only result is not a blocked attempt. Retries require a new reading; cached readings cannot be reused. The retry counter is reset only after a successful live start, never after a diagnostic run."
+        },
+        {
+          "section": "closing",
+          "text": "## Contact\nFor an unreadable Cobalt label, stop the cooler and contact the station desk. This document contains fictional operational information for retrieval experiments only. It is not an engineering procedure for real equipment."
+        }
+      ]
+    },
+    {
+      "id": "cobalt-table",
+      "kind": "table",
+      "split": "eval",
+      "blocks": [
+        {
+          "section": "overview",
+          "text": "# Cobalt cooler: table reference\nThis fictional manual covers the Cobalt station cooler. Operators distinguish the live temperature reading from the test reading. Test readings never authorize a live restart. Keep the maintenance log with the device serial number and record the current shift before changing settings."
+        },
+        {
+          "section": "limits",
+          "text": "## Cobalt limits\nUse the active-mode row for the live cooler. The standby row applies only after shutdown. The inspection row is used during supervised maintenance and does not authorize production. Each row specifies its own maximum reading, wait duration, and required permit. Never combine cells from different rows."
+        },
+        {
+          "section": "limits",
+          "text": "| Mode | Maximum reading | Wait seconds | Permit |\n| --- | ---: | ---: | --- |\n| active | 12 | 90 | silver |\n| standby | 19 | 105 | white |\n| inspection | 23 | 120 | black |"
+        },
+        {
+          "section": "exceptions",
+          "text": "## Expired permits\nAn expired silver permit invalidates the active row for the Cobalt cooler. Renew it at the station desk before retrying. Standby limits remain valid while renewal is pending. The desk cannot waive the active maximum; approval restores permission but never changes the table values."
+        },
+        {
+          "section": "closing",
+          "text": "## Contact\nFor an unreadable Cobalt label, stop the cooler and contact the station desk. This document contains fictional operational information for retrieval experiments only. It is not an engineering procedure for real equipment."
+        }
+      ]
+    },
+    {
+      "id": "cobalt-cross_reference",
+      "kind": "cross_reference",
+      "split": "eval",
+      "blocks": [
+        {
+          "section": "overview",
+          "text": "# Cobalt cooler: cross reference reference\nThis fictional manual covers the Cobalt station cooler. Operators distinguish the live temperature reading from the test reading. Test readings never authorize a live restart. Keep the maintenance log with the device serial number and record the current shift before changing settings."
+        },
+        {
+          "section": "release",
+          "text": "## Release procedure R-Cobalt\nRelease of the Cobalt cooler requires the silver permit defined in section P-Cobalt. The release operator must also complete the waiting rule in section W-Cobalt. A signature on the shift log records completion; it does not replace either prerequisite. Training releases follow a separate procedure and cannot authorize a live device."
+        },
+        {
+          "section": "unrelated",
+          "text": "## Archive retention\nArchive completed shift logs for fourteen days in the local cabinet. Copy only the serial number into the central index. The archive clerk checks page counts at the end of each shift. Missing pages require an incident note, but the archive process cannot issue permits or change device waiting rules."
+        },
+        {
+          "section": "permit",
+          "text": "## P-Cobalt: Permit definition\nThe silver permit requires two signatures: the operator and the duty engineer. This permit applies to the Cobalt cooler only. A training supervisor cannot substitute for the duty engineer. Both signatures must be dated during the current shift. An older signed permit expires at shift handover."
+        },
+        {
+          "section": "wait",
+          "text": "## W-Cobalt: Waiting rule\nWait 90 seconds after the temperature falls below 12 before release. Restart the timer whenever the reading rises above the limit. The operator records the final uninterrupted interval in the shift log. The timer is a prerequisite separate from the permit signatures."
+        },
+        {
+          "section": "closing",
+          "text": "## Contact\nFor an unreadable Cobalt label, stop the cooler and contact the station desk. This document contains fictional operational information for retrieval experiments only. It is not an engineering procedure for real equipment."
+        }
+      ]
+    },
+    {
+      "id": "delta-code",
+      "kind": "code",
+      "split": "eval",
+      "blocks": [
+        {
+          "section": "overview",
+          "text": "# Delta valve: code reference\nThis fictional manual covers the Delta station valve. Operators distinguish the live flow reading from the test reading. Test readings never authorize a live restart. Keep the maintenance log with the device serial number and record the current shift before changing settings."
+        },
+        {
+          "section": "startup",
+          "text": "## Starting the Delta controller\nThe controller checks flow before enabling the valve. The maintenance branch returns a diagnostic result without activating hardware. A missing reading is a hard failure. Callers must handle the exception and must not replace a missing reading with zero. This distinction matters during startup."
+        },
+        {
+          "section": "startup",
+          "text": "```python\ndef start_valve(reading, maintenance=False):\n    if reading is None:\n        raise ValueError('missing reading')\n    if maintenance:\n        return 'diagnostic-only'\n    if reading > 32:\n        return 'blocked'\n    return 'start-copper'\n```"
+        },
+        {
+          "section": "retries",
+          "text": "## Retry policy\nThe Delta valve startup caller waits 75 seconds after a blocked attempt. A diagnostic-only result is not a blocked attempt. Retries require a new reading; cached readings cannot be reused. The retry counter is reset only after a successful live start, never after a diagnostic run."
+        },
+        {
+          "section": "closing",
+          "text": "## Contact\nFor an unreadable Delta label, stop the valve and contact the station desk. This document contains fictional operational information for retrieval experiments only. It is not an engineering procedure for real equipment."
+        }
+      ]
+    },
+    {
+      "id": "delta-table",
+      "kind": "table",
+      "split": "eval",
+      "blocks": [
+        {
+          "section": "overview",
+          "text": "# Delta valve: table reference\nThis fictional manual covers the Delta station valve. Operators distinguish the live flow reading from the test reading. Test readings never authorize a live restart. Keep the maintenance log with the device serial number and record the current shift before changing settings."
+        },
+        {
+          "section": "limits",
+          "text": "## Delta limits\nUse the active-mode row for the live valve. The standby row applies only after shutdown. The inspection row is used during supervised maintenance and does not authorize production. Each row specifies its own maximum reading, wait duration, and required permit. Never combine cells from different rows."
+        },
+        {
+          "section": "limits",
+          "text": "| Mode | Maximum reading | Wait seconds | Permit |\n| --- | ---: | ---: | --- |\n| active | 32 | 75 | copper |\n| standby | 39 | 90 | white |\n| inspection | 43 | 105 | black |"
+        },
+        {
+          "section": "exceptions",
+          "text": "## Expired permits\nAn expired copper permit invalidates the active row for the Delta valve. Renew it at the station desk before retrying. Standby limits remain valid while renewal is pending. The desk cannot waive the active maximum; approval restores permission but never changes the table values."
+        },
+        {
+          "section": "closing",
+          "text": "## Contact\nFor an unreadable Delta label, stop the valve and contact the station desk. This document contains fictional operational information for retrieval experiments only. It is not an engineering procedure for real equipment."
+        }
+      ]
+    },
+    {
+      "id": "delta-cross_reference",
+      "kind": "cross_reference",
+      "split": "eval",
+      "blocks": [
+        {
+          "section": "overview",
+          "text": "# Delta valve: cross reference reference\nThis fictional manual covers the Delta station valve. Operators distinguish the live flow reading from the test reading. Test readings never authorize a live restart. Keep the maintenance log with the device serial number and record the current shift before changing settings."
+        },
+        {
+          "section": "release",
+          "text": "## Release procedure R-Delta\nRelease of the Delta valve requires the copper permit defined in section P-Delta. The release operator must also complete the waiting rule in section W-Delta. A signature on the shift log records completion; it does not replace either prerequisite. Training releases follow a separate procedure and cannot authorize a live device."
+        },
+        {
+          "section": "unrelated",
+          "text": "## Archive retention\nArchive completed shift logs for fourteen days in the local cabinet. Copy only the serial number into the central index. The archive clerk checks page counts at the end of each shift. Missing pages require an incident note, but the archive process cannot issue permits or change device waiting rules."
+        },
+        {
+          "section": "permit",
+          "text": "## P-Delta: Permit definition\nThe copper permit requires two signatures: the operator and the duty engineer. This permit applies to the Delta valve only. A training supervisor cannot substitute for the duty engineer. Both signatures must be dated during the current shift. An older signed permit expires at shift handover."
+        },
+        {
+          "section": "wait",
+          "text": "## W-Delta: Waiting rule\nWait 75 seconds after the flow falls below 32 before release. Restart the timer whenever the reading rises above the limit. The operator records the final uninterrupted interval in the shift log. The timer is a prerequisite separate from the permit signatures."
+        },
+        {
+          "section": "closing",
+          "text": "## Contact\nFor an unreadable Delta label, stop the valve and contact the station desk. This document contains fictional operational information for retrieval experiments only. It is not an engineering procedure for real equipment."
+        }
+      ]
+    },
+    {
+      "id": "ember-code",
+      "kind": "code",
+      "split": "eval",
+      "blocks": [
+        {
+          "section": "overview",
+          "text": "# Ember fan: code reference\nThis fictional manual covers the Ember station fan. Operators distinguish the live speed reading from the test reading. Test readings never authorize a live restart. Keep the maintenance log with the device serial number and record the current shift before changing settings."
+        },
+        {
+          "section": "startup",
+          "text": "## Starting the Ember controller\nThe controller checks speed before enabling the fan. The maintenance branch returns a diagnostic result without activating hardware. A missing reading is a hard failure. Callers must handle the exception and must not replace a missing reading with zero. This distinction matters during startup."
+        },
+        {
+          "section": "startup",
+          "text": "```python\ndef start_fan(reading, maintenance=False):\n    if reading is None:\n        raise ValueError('missing reading')\n    if maintenance:\n        return 'diagnostic-only'\n    if reading > 48:\n        return 'blocked'\n    return 'start-indigo'\n```"
+        },
+        {
+          "section": "retries",
+          "text": "## Retry policy\nThe Ember fan startup caller waits 120 seconds after a blocked attempt. A diagnostic-only result is not a blocked attempt. Retries require a new reading; cached readings cannot be reused. The retry counter is reset only after a successful live start, never after a diagnostic run."
+        },
+        {
+          "section": "closing",
+          "text": "## Contact\nFor an unreadable Ember label, stop the fan and contact the station desk. This document contains fictional operational information for retrieval experiments only. It is not an engineering procedure for real equipment."
+        }
+      ]
+    },
+    {
+      "id": "ember-table",
+      "kind": "table",
+      "split": "eval",
+      "blocks": [
+        {
+          "section": "overview",
+          "text": "# Ember fan: table reference\nThis fictional manual covers the Ember station fan. Operators distinguish the live speed reading from the test reading. Test readings never authorize a live restart. Keep the maintenance log with the device serial number and record the current shift before changing settings."
+        },
+        {
+          "section": "limits",
+          "text": "## Ember limits\nUse the active-mode row for the live fan. The standby row applies only after shutdown. The inspection row is used during supervised maintenance and does not authorize production. Each row specifies its own maximum reading, wait duration, and required permit. Never combine cells from different rows."
+        },
+        {
+          "section": "limits",
+          "text": "| Mode | Maximum reading | Wait seconds | Permit |\n| --- | ---: | ---: | --- |\n| active | 48 | 120 | indigo |\n| standby | 55 | 135 | white |\n| inspection | 59 | 150 | black |"
+        },
+        {
+          "section": "exceptions",
+          "text": "## Expired permits\nAn expired indigo permit invalidates the active row for the Ember fan. Renew it at the station desk before retrying. Standby limits remain valid while renewal is pending. The desk cannot waive the active maximum; approval restores permission but never changes the table values."
+        },
+        {
+          "section": "closing",
+          "text": "## Contact\nFor an unreadable Ember label, stop the fan and contact the station desk. This document contains fictional operational information for retrieval experiments only. It is not an engineering procedure for real equipment."
+        }
+      ]
+    },
+    {
+      "id": "ember-cross_reference",
+      "kind": "cross_reference",
+      "split": "eval",
+      "blocks": [
+        {
+          "section": "overview",
+          "text": "# Ember fan: cross reference reference\nThis fictional manual covers the Ember station fan. Operators distinguish the live speed reading from the test reading. Test readings never authorize a live restart. Keep the maintenance log with the device serial number and record the current shift before changing settings."
+        },
+        {
+          "section": "release",
+          "text": "## Release procedure R-Ember\nRelease of the Ember fan requires the indigo permit defined in section P-Ember. The release operator must also complete the waiting rule in section W-Ember. A signature on the shift log records completion; it does not replace either prerequisite. Training releases follow a separate procedure and cannot authorize a live device."
+        },
+        {
+          "section": "unrelated",
+          "text": "## Archive retention\nArchive completed shift logs for fourteen days in the local cabinet. Copy only the serial number into the central index. The archive clerk checks page counts at the end of each shift. Missing pages require an incident note, but the archive process cannot issue permits or change device waiting rules."
+        },
+        {
+          "section": "permit",
+          "text": "## P-Ember: Permit definition\nThe indigo permit requires two signatures: the operator and the duty engineer. This permit applies to the Ember fan only. A training supervisor cannot substitute for the duty engineer. Both signatures must be dated during the current shift. An older signed permit expires at shift handover."
+        },
+        {
+          "section": "wait",
+          "text": "## W-Ember: Waiting rule\nWait 120 seconds after the speed falls below 48 before release. Restart the timer whenever the reading rises above the limit. The operator records the final uninterrupted interval in the shift log. The timer is a prerequisite separate from the permit signatures."
+        },
+        {
+          "section": "closing",
+          "text": "## Contact\nFor an unreadable Ember label, stop the fan and contact the station desk. This document contains fictional operational information for retrieval experiments only. It is not an engineering procedure for real equipment."
+        }
+      ]
+    },
+    {
+      "id": "flint-code",
+      "kind": "code",
+      "split": "eval",
+      "blocks": [
+        {
+          "section": "overview",
+          "text": "# Flint sensor: code reference\nThis fictional manual covers the Flint station sensor. Operators distinguish the live humidity reading from the test reading. Test readings never authorize a live restart. Keep the maintenance log with the device serial number and record the current shift before changing settings."
+        },
+        {
+          "section": "startup",
+          "text": "## Starting the Flint controller\nThe controller checks humidity before enabling the sensor. The maintenance branch returns a diagnostic result without activating hardware. A missing reading is a hard failure. Callers must handle the exception and must not replace a missing reading with zero. This distinction matters during startup."
+        },
+        {
+          "section": "startup",
+          "text": "```python\ndef start_sensor(reading, maintenance=False):\n    if reading is None:\n        raise ValueError('missing reading')\n    if maintenance:\n        return 'diagnostic-only'\n    if reading > 65:\n        return 'blocked'\n    return 'start-scarlet'\n```"
+        },
+        {
+          "section": "retries",
+          "text": "## Retry policy\nThe Flint sensor startup caller waits 150 seconds after a blocked attempt. A diagnostic-only result is not a blocked attempt. Retries require a new reading; cached readings cannot be reused. The retry counter is reset only after a successful live start, never after a diagnostic run."
+        },
+        {
+          "section": "closing",
+          "text": "## Contact\nFor an unreadable Flint label, stop the sensor and contact the station desk. This document contains fictional operational information for retrieval experiments only. It is not an engineering procedure for real equipment."
+        }
+      ]
+    },
+    {
+      "id": "flint-table",
+      "kind": "table",
+      "split": "eval",
+      "blocks": [
+        {
+          "section": "overview",
+          "text": "# Flint sensor: table reference\nThis fictional manual covers the Flint station sensor. Operators distinguish the live humidity reading from the test reading. Test readings never authorize a live restart. Keep the maintenance log with the device serial number and record the current shift before changing settings."
+        },
+        {
+          "section": "limits",
+          "text": "## Flint limits\nUse the active-mode row for the live sensor. The standby row applies only after shutdown. The inspection row is used during supervised maintenance and does not authorize production. Each row specifies its own maximum reading, wait duration, and required permit. Never combine cells from different rows."
+        },
+        {
+          "section": "limits",
+          "text": "| Mode | Maximum reading | Wait seconds | Permit |\n| --- | ---: | ---: | --- |\n| active | 65 | 150 | scarlet |\n| standby | 72 | 165 | white |\n| inspection | 76 | 180 | black |"
+        },
+        {
+          "section": "exceptions",
+          "text": "## Expired permits\nAn expired scarlet permit invalidates the active row for the Flint sensor. Renew it at the station desk before retrying. Standby limits remain valid while renewal is pending. The desk cannot waive the active maximum; approval restores permission but never changes the table values."
+        },
+        {
+          "section": "closing",
+          "text": "## Contact\nFor an unreadable Flint label, stop the sensor and contact the station desk. This document contains fictional operational information for retrieval experiments only. It is not an engineering procedure for real equipment."
+        }
+      ]
+    },
+    {
+      "id": "flint-cross_reference",
+      "kind": "cross_reference",
+      "split": "eval",
+      "blocks": [
+        {
+          "section": "overview",
+          "text": "# Flint sensor: cross reference reference\nThis fictional manual covers the Flint station sensor. Operators distinguish the live humidity reading from the test reading. Test readings never authorize a live restart. Keep the maintenance log with the device serial number and record the current shift before changing settings."
+        },
+        {
+          "section": "release",
+          "text": "## Release procedure R-Flint\nRelease of the Flint sensor requires the scarlet permit defined in section P-Flint. The release operator must also complete the waiting rule in section W-Flint. A signature on the shift log records completion; it does not replace either prerequisite. Training releases follow a separate procedure and cannot authorize a live device."
+        },
+        {
+          "section": "unrelated",
+          "text": "## Archive retention\nArchive completed shift logs for fourteen days in the local cabinet. Copy only the serial number into the central index. The archive clerk checks page counts at the end of each shift. Missing pages require an incident note, but the archive process cannot issue permits or change device waiting rules."
+        },
+        {
+          "section": "permit",
+          "text": "## P-Flint: Permit definition\nThe scarlet permit requires two signatures: the operator and the duty engineer. This permit applies to the Flint sensor only. A training supervisor cannot substitute for the duty engineer. Both signatures must be dated during the current shift. An older signed permit expires at shift handover."
+        },
+        {
+          "section": "wait",
+          "text": "## W-Flint: Waiting rule\nWait 150 seconds after the humidity falls below 65 before release. Restart the timer whenever the reading rises above the limit. The operator records the final uninterrupted interval in the shift log. The timer is a prerequisite separate from the permit signatures."
+        },
+        {
+          "section": "closing",
+          "text": "## Contact\nFor an unreadable Flint label, stop the sensor and contact the station desk. This document contains fictional operational information for retrieval experiments only. It is not an engineering procedure for real equipment."
+        }
+      ]
+    }
+  ],
+  "queries": [
+    {
+      "id": "aster-code-q1",
+      "doc_id": "aster-code",
+      "split": "dev",
+      "text": "In Aster's pump function, what happens if the reading is missing?",
+      "evidence": [
+        [
+          701,
+          764
+        ]
+      ]
+    },
+    {
+      "id": "aster-code-q2",
+      "doc_id": "aster-code",
+      "split": "dev",
+      "text": "What does Aster's pump startup return in maintenance mode?",
+      "evidence": [
+        [
+          769,
+          817
+        ]
+      ]
+    },
+    {
+      "id": "aster-code-q3",
+      "doc_id": "aster-code",
+      "split": "dev",
+      "text": "For Aster's pump, what threshold blocks startup and how long must the caller wait after it is blocked?",
+      "evidence": [
+        [
+          822,
+          863
+        ],
+        [
+          925,
+          956
+        ]
+      ]
+    },
+    {
+      "id": "aster-table-q1",
+      "doc_id": "aster-table",
+      "split": "dev",
+      "text": "What maximum reading and wait apply to the active Aster pump?",
+      "evidence": [
+        [
+          708,
+          736
+        ]
+      ]
+    },
+    {
+      "id": "aster-table-q2",
+      "doc_id": "aster-table",
+      "split": "dev",
+      "text": "Which permit and maximum reading are listed for Aster pump inspection?",
+      "evidence": [
+        [
+          767,
+          799
+        ]
+      ]
+    },
+    {
+      "id": "aster-table-q3",
+      "doc_id": "aster-table",
+      "split": "dev",
+      "text": "Which permit does the Aster active row require, and where is it renewed?",
+      "evidence": [
+        [
+          708,
+          736
+        ],
+        [
+          891,
+          936
+        ]
+      ]
+    },
+    {
+      "id": "aster-cross_reference-q1",
+      "doc_id": "aster-cross_reference",
+      "split": "dev",
+      "text": "What signatures are required by the permit referenced in Aster's release procedure?",
+      "evidence": [
+        [
+          350,
+          429
+        ],
+        [
+          1033,
+          1110
+        ]
+      ]
+    },
+    {
+      "id": "aster-cross_reference-q2",
+      "doc_id": "aster-cross_reference",
+      "split": "dev",
+      "text": "What waiting rule does Aster's release procedure reference?",
+      "evidence": [
+        [
+          430,
+          506
+        ],
+        [
+          1350,
+          1415
+        ]
+      ]
+    },
+    {
+      "id": "aster-cross_reference-q3",
+      "doc_id": "aster-cross_reference",
+      "split": "dev",
+      "text": "When does Aster's amber permit expire?",
+      "evidence": [
+        [
+          1274,
+          1323
+        ]
+      ]
+    },
+    {
+      "id": "birch-code-q1",
+      "doc_id": "birch-code",
+      "split": "dev",
+      "text": "In Birch's relay function, what happens if the reading is missing?",
+      "evidence": [
+        [
+          703,
+          766
+        ]
+      ]
+    },
+    {
+      "id": "birch-code-q2",
+      "doc_id": "birch-code",
+      "split": "dev",
+      "text": "What does Birch's relay startup return in maintenance mode?",
+      "evidence": [
+        [
+          771,
+          819
+        ]
+      ]
+    },
+    {
+      "id": "birch-code-q3",
+      "doc_id": "birch-code",
+      "split": "dev",
+      "text": "For Birch's relay, what threshold blocks startup and how long must the caller wait after it is blocked?",
+      "evidence": [
+        [
+          824,
+          865
+        ],
+        [
+          929,
+          960
+        ]
+      ]
+    },
+    {
+      "id": "birch-table-q1",
+      "doc_id": "birch-table",
+      "split": "dev",
+      "text": "What maximum reading and wait apply to the active Birch relay?",
+      "evidence": [
+        [
+          710,
+          739
+        ]
+      ]
+    },
+    {
+      "id": "birch-table-q2",
+      "doc_id": "birch-table",
+      "split": "dev",
+      "text": "Which permit and maximum reading are listed for Birch relay inspection?",
+      "evidence": [
+        [
+          770,
+          802
+        ]
+      ]
+    },
+    {
+      "id": "birch-table-q3",
+      "doc_id": "birch-table",
+      "split": "dev",
+      "text": "Which permit does the Birch active row require, and where is it renewed?",
+      "evidence": [
+        [
+          710,
+          739
+        ],
+        [
+          896,
+          941
+        ]
+      ]
+    },
+    {
+      "id": "birch-cross_reference-q1",
+      "doc_id": "birch-cross_reference",
+      "split": "dev",
+      "text": "What signatures are required by the permit referenced in Birch's release procedure?",
+      "evidence": [
+        [
+          351,
+          432
+        ],
+        [
+          1036,
+          1114
+        ]
+      ]
+    },
+    {
+      "id": "birch-cross_reference-q2",
+      "doc_id": "birch-cross_reference",
+      "split": "dev",
+      "text": "What waiting rule does Birch's release procedure reference?",
+      "evidence": [
+        [
+          433,
+          509
+        ],
+        [
+          1355,
+          1419
+        ]
+      ]
+    },
+    {
+      "id": "birch-cross_reference-q3",
+      "doc_id": "birch-cross_reference",
+      "split": "dev",
+      "text": "When does Birch's violet permit expire?",
+      "evidence": [
+        [
+          1279,
+          1328
+        ]
+      ]
+    },
+    {
+      "id": "cobalt-code-q1",
+      "doc_id": "cobalt-code",
+      "split": "eval",
+      "text": "In Cobalt's cooler function, what happens if the reading is missing?",
+      "evidence": [
+        [
+          718,
+          781
+        ]
+      ]
+    },
+    {
+      "id": "cobalt-code-q2",
+      "doc_id": "cobalt-code",
+      "split": "eval",
+      "text": "What does Cobalt's cooler startup return in maintenance mode?",
+      "evidence": [
+        [
+          786,
+          834
+        ]
+      ]
+    },
+    {
+      "id": "cobalt-code-q3",
+      "doc_id": "cobalt-code",
+      "split": "eval",
+      "text": "For Cobalt's cooler, what threshold blocks startup and how long must the caller wait after it is blocked?",
+      "evidence": [
+        [
+          839,
+          880
+        ],
+        [
+          946,
+          977
+        ]
+      ]
+    },
+    {
+      "id": "cobalt-table-q1",
+      "doc_id": "cobalt-table",
+      "split": "eval",
+      "text": "What maximum reading and wait apply to the active Cobalt cooler?",
+      "evidence": [
+        [
+          720,
+          749
+        ]
+      ]
+    },
+    {
+      "id": "cobalt-table-q2",
+      "doc_id": "cobalt-table",
+      "split": "eval",
+      "text": "Which permit and maximum reading are listed for Cobalt cooler inspection?",
+      "evidence": [
+        [
+          781,
+          814
+        ]
+      ]
+    },
+    {
+      "id": "cobalt-table-q3",
+      "doc_id": "cobalt-table",
+      "split": "eval",
+      "text": "Which permit does the Cobalt active row require, and where is it renewed?",
+      "evidence": [
+        [
+          720,
+          749
+        ],
+        [
+          910,
+          955
+        ]
+      ]
+    },
+    {
+      "id": "cobalt-cross_reference-q1",
+      "doc_id": "cobalt-cross_reference",
+      "split": "eval",
+      "text": "What signatures are required by the permit referenced in Cobalt's release procedure?",
+      "evidence": [
+        [
+          360,
+          444
+        ],
+        [
+          1050,
+          1128
+        ]
+      ]
+    },
+    {
+      "id": "cobalt-cross_reference-q2",
+      "doc_id": "cobalt-cross_reference",
+      "split": "eval",
+      "text": "What waiting rule does Cobalt's release procedure reference?",
+      "evidence": [
+        [
+          445,
+          522
+        ],
+        [
+          1372,
+          1440
+        ]
+      ]
+    },
+    {
+      "id": "cobalt-cross_reference-q3",
+      "doc_id": "cobalt-cross_reference",
+      "split": "eval",
+      "text": "When does Cobalt's silver permit expire?",
+      "evidence": [
+        [
+          1295,
+          1344
+        ]
+      ]
+    },
+    {
+      "id": "delta-code-q1",
+      "doc_id": "delta-code",
+      "split": "eval",
+      "text": "In Delta's valve function, what happens if the reading is missing?",
+      "evidence": [
+        [
+          697,
+          760
+        ]
+      ]
+    },
+    {
+      "id": "delta-code-q2",
+      "doc_id": "delta-code",
+      "split": "eval",
+      "text": "What does Delta's valve startup return in maintenance mode?",
+      "evidence": [
+        [
+          765,
+          813
+        ]
+      ]
+    },
+    {
+      "id": "delta-code-q3",
+      "doc_id": "delta-code",
+      "split": "eval",
+      "text": "For Delta's valve, what threshold blocks startup and how long must the caller wait after it is blocked?",
+      "evidence": [
+        [
+          818,
+          859
+        ],
+        [
+          923,
+          954
+        ]
+      ]
+    },
+    {
+      "id": "delta-table-q1",
+      "doc_id": "delta-table",
+      "split": "eval",
+      "text": "What maximum reading and wait apply to the active Delta valve?",
+      "evidence": [
+        [
+          707,
+          736
+        ]
+      ]
+    },
+    {
+      "id": "delta-table-q2",
+      "doc_id": "delta-table",
+      "split": "eval",
+      "text": "Which permit and maximum reading are listed for Delta valve inspection?",
+      "evidence": [
+        [
+          767,
+          800
+        ]
+      ]
+    },
+    {
+      "id": "delta-table-q3",
+      "doc_id": "delta-table",
+      "split": "eval",
+      "text": "Which permit does the Delta active row require, and where is it renewed?",
+      "evidence": [
+        [
+          707,
+          736
+        ],
+        [
+          894,
+          939
+        ]
+      ]
+    },
+    {
+      "id": "delta-cross_reference-q1",
+      "doc_id": "delta-cross_reference",
+      "split": "eval",
+      "text": "What signatures are required by the permit referenced in Delta's release procedure?",
+      "evidence": [
+        [
+          348,
+          429
+        ],
+        [
+          1033,
+          1111
+        ]
+      ]
+    },
+    {
+      "id": "delta-cross_reference-q2",
+      "doc_id": "delta-cross_reference",
+      "split": "eval",
+      "text": "What waiting rule does Delta's release procedure reference?",
+      "evidence": [
+        [
+          430,
+          506
+        ],
+        [
+          1352,
+          1413
+        ]
+      ]
+    },
+    {
+      "id": "delta-cross_reference-q3",
+      "doc_id": "delta-cross_reference",
+      "split": "eval",
+      "text": "When does Delta's copper permit expire?",
+      "evidence": [
+        [
+          1276,
+          1325
+        ]
+      ]
+    },
+    {
+      "id": "ember-code-q1",
+      "doc_id": "ember-code",
+      "split": "eval",
+      "text": "In Ember's fan function, what happens if the reading is missing?",
+      "evidence": [
+        [
+          691,
+          754
+        ]
+      ]
+    },
+    {
+      "id": "ember-code-q2",
+      "doc_id": "ember-code",
+      "split": "eval",
+      "text": "What does Ember's fan startup return in maintenance mode?",
+      "evidence": [
+        [
+          759,
+          807
+        ]
+      ]
+    },
+    {
+      "id": "ember-code-q3",
+      "doc_id": "ember-code",
+      "split": "eval",
+      "text": "For Ember's fan, what threshold blocks startup and how long must the caller wait after it is blocked?",
+      "evidence": [
+        [
+          812,
+          853
+        ],
+        [
+          915,
+          947
+        ]
+      ]
+    },
+    {
+      "id": "ember-table-q1",
+      "doc_id": "ember-table",
+      "split": "eval",
+      "text": "What maximum reading and wait apply to the active Ember fan?",
+      "evidence": [
+        [
+          702,
+          732
+        ]
+      ]
+    },
+    {
+      "id": "ember-table-q2",
+      "doc_id": "ember-table",
+      "split": "eval",
+      "text": "Which permit and maximum reading are listed for Ember fan inspection?",
+      "evidence": [
+        [
+          764,
+          797
+        ]
+      ]
+    },
+    {
+      "id": "ember-table-q3",
+      "doc_id": "ember-table",
+      "split": "eval",
+      "text": "Which permit does the Ember active row require, and where is it renewed?",
+      "evidence": [
+        [
+          702,
+          732
+        ],
+        [
+          889,
+          934
+        ]
+      ]
+    },
+    {
+      "id": "ember-cross_reference-q1",
+      "doc_id": "ember-cross_reference",
+      "split": "eval",
+      "text": "What signatures are required by the permit referenced in Ember's release procedure?",
+      "evidence": [
+        [
+          345,
+          424
+        ],
+        [
+          1028,
+          1106
+        ]
+      ]
+    },
+    {
+      "id": "ember-cross_reference-q2",
+      "doc_id": "ember-cross_reference",
+      "split": "eval",
+      "text": "What waiting rule does Ember's release procedure reference?",
+      "evidence": [
+        [
+          425,
+          501
+        ],
+        [
+          1345,
+          1408
+        ]
+      ]
+    },
+    {
+      "id": "ember-cross_reference-q3",
+      "doc_id": "ember-cross_reference",
+      "split": "eval",
+      "text": "When does Ember's indigo permit expire?",
+      "evidence": [
+        [
+          1269,
+          1318
+        ]
+      ]
+    },
+    {
+      "id": "flint-code-q1",
+      "doc_id": "flint-code",
+      "split": "eval",
+      "text": "In Flint's sensor function, what happens if the reading is missing?",
+      "evidence": [
+        [
+          709,
+          772
+        ]
+      ]
+    },
+    {
+      "id": "flint-code-q2",
+      "doc_id": "flint-code",
+      "split": "eval",
+      "text": "What does Flint's sensor startup return in maintenance mode?",
+      "evidence": [
+        [
+          777,
+          825
+        ]
+      ]
+    },
+    {
+      "id": "flint-code-q3",
+      "doc_id": "flint-code",
+      "split": "eval",
+      "text": "For Flint's sensor, what threshold blocks startup and how long must the caller wait after it is blocked?",
+      "evidence": [
+        [
+          830,
+          871
+        ],
+        [
+          937,
+          969
+        ]
+      ]
+    },
+    {
+      "id": "flint-table-q1",
+      "doc_id": "flint-table",
+      "split": "eval",
+      "text": "What maximum reading and wait apply to the active Flint sensor?",
+      "evidence": [
+        [
+          714,
+          745
+        ]
+      ]
+    },
+    {
+      "id": "flint-table-q2",
+      "doc_id": "flint-table",
+      "split": "eval",
+      "text": "Which permit and maximum reading are listed for Flint sensor inspection?",
+      "evidence": [
+        [
+          777,
+          810
+        ]
+      ]
+    },
+    {
+      "id": "flint-table-q3",
+      "doc_id": "flint-table",
+      "split": "eval",
+      "text": "Which permit does the Flint active row require, and where is it renewed?",
+      "evidence": [
+        [
+          714,
+          745
+        ],
+        [
+          906,
+          951
+        ]
+      ]
+    },
+    {
+      "id": "flint-cross_reference-q1",
+      "doc_id": "flint-cross_reference",
+      "split": "eval",
+      "text": "What signatures are required by the permit referenced in Flint's release procedure?",
+      "evidence": [
+        [
+          354,
+          437
+        ],
+        [
+          1041,
+          1120
+        ]
+      ]
+    },
+    {
+      "id": "flint-cross_reference-q2",
+      "doc_id": "flint-cross_reference",
+      "split": "eval",
+      "text": "What waiting rule does Flint's release procedure reference?",
+      "evidence": [
+        [
+          438,
+          514
+        ],
+        [
+          1362,
+          1428
+        ]
+      ]
+    },
+    {
+      "id": "flint-cross_reference-q3",
+      "doc_id": "flint-cross_reference",
+      "split": "eval",
+      "text": "When does Flint's scarlet permit expire?",
+      "evidence": [
+        [
+          1286,
+          1335
+        ]
+      ]
+    }
+  ]
+}
