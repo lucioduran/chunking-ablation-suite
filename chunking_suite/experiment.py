@@ -109,9 +109,11 @@ def evaluate(data: dict, split: str, encoder, metadata: dict) -> dict:
     start = time.perf_counter()
     query_vectors = encoder.encode([q["text"] for q in queries])
     query_seconds = time.perf_counter() - start
-    runs = []
+    runs: list[dict] = []
     for config in configurations():
-        chunks, vectors, costs = [], [], {}
+        chunks: list[dict] = []
+        vectors: list[list[float]] = []
+        costs: dict[str, dict] = {}
         for doc in docs:
             start = time.perf_counter()
             current = chunk(doc, config, blocks[doc["id"]])

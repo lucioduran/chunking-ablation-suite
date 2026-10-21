@@ -57,6 +57,7 @@ class ModelTests(unittest.TestCase):
         from chunking_suite.experiment import environment
 
         with (
+            patch("chunking_suite.experiment.platform.platform", return_value="test-os"),
             patch("chunking_suite.experiment.importlib.metadata.version", return_value="test"),
             patch("chunking_suite.experiment.subprocess.check_output", return_value="test\n"),
             patch("chunking_suite.experiment.sys.platform", "darwin"),
@@ -65,8 +66,9 @@ class ModelTests(unittest.TestCase):
             self.assertEqual(info["cpu"], "test")
             self.assertTrue(info["git_dirty"])
         with (
+            patch("chunking_suite.experiment.platform.platform", return_value="test-os"),
             patch("chunking_suite.experiment.importlib.metadata.version", return_value="test"),
-            patch("chunking_suite.experiment.subprocess.check_output", return_value="\n"),
+            patch("chunking_suite.experiment.subprocess.check_output", return_value=""),
             patch("chunking_suite.experiment.sys.platform", "linux"),
         ):
             self.assertFalse(environment()["git_dirty"])
