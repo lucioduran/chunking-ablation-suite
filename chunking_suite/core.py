@@ -53,9 +53,12 @@ def load_data(path: Path) -> dict:
             raise ValueError("Missing evidence")
         text = document_text(docs[query["doc_id"]])
         for span in query["evidence"]:
-            if (not isinstance(span, list) or len(span) != 2
-                    or any(type(x) is not int for x in span)
-                    or not 0 <= span[0] < span[1] <= len(text)):
+            if (
+                not isinstance(span, list)
+                or len(span) != 2
+                or any(type(x) is not int for x in span)
+                or not 0 <= span[0] < span[1] <= len(text)
+            ):
                 raise ValueError("Invalid evidence span")
     return data
 
@@ -77,22 +80,37 @@ def block_spans(doc: dict) -> list[tuple[int, int]]:
 def cosine(a: list[float], b: list[float]) -> float:
     if not a or len(a) != len(b) or any(not math.isfinite(x) for x in a + b):
         raise ValueError("Vectors must have matching nonzero dimensions and finite values")
-    norm = math.sqrt(sum(x*x for x in a) * sum(x*x for x in b))
+    norm = math.sqrt(sum(x * x for x in a) * sum(x * x for x in b))
     if norm == 0:
         raise ValueError("Zero vector")
-    return sum(x*y for x, y in zip(a, b, strict=True)) / norm
+    return sum(x * y for x, y in zip(a, b, strict=True)) / norm
 
 
 def configurations() -> list[dict]:
     configs = []
     for method in ("fixed", "structure", "semantic"):
         for size in (64, 96):
-            configs.append({"id": f"{method}-{size}", "method": method,
-                            "size": size, "overlap": 0, "threshold": 0.5})
-    configs.append({"id": "fixed-64-overlap16", "method": "fixed", "size": 64,
-                    "overlap": 16, "threshold": 0.5})
-    configs.append({"id": "semantic-64-threshold07", "method": "semantic", "size": 64,
-                    "overlap": 0, "threshold": 0.7})
+            configs.append(
+                {
+                    "id": f"{method}-{size}",
+                    "method": method,
+                    "size": size,
+                    "overlap": 0,
+                    "threshold": 0.5,
+                }
+            )
+    configs.append(
+        {"id": "fixed-64-overlap16", "method": "fixed", "size": 64, "overlap": 16, "threshold": 0.5}
+    )
+    configs.append(
+        {
+            "id": "semantic-64-threshold07",
+            "method": "semantic",
+            "size": 64,
+            "overlap": 0,
+            "threshold": 0.7,
+        }
+    )
     return configs
 
 
@@ -114,7 +132,7 @@ def chunk(doc: dict, config: dict, vectors: list[list[float]]) -> list[dict]:
     if method == "fixed":
         for i in range(0, len(words), size - overlap):
             end = min(i + size, len(words))
-            ranges.append((words[i].start(), words[end-1].end()))
+            ranges.append((words[i].start(), words[end - 1].end()))
             if end == len(words):
                 break
     else:
@@ -125,17 +143,27 @@ def chunk(doc: dict, config: dict, vectors: list[list[float]]) -> list[dict]:
         count = len(text[start:end].split())
         for i, (left, right) in enumerate(spans[1:], 1):
             added = len(text[left:right].split())
-            boundary = (doc["blocks"][i]["section"] != doc["blocks"][i-1]["section"]
-                        if method == "structure"
-                        else cosine(vectors[i-1], vectors[i]) < config["threshold"])
+            boundary = (
+                doc["blocks"][i]["section"] != doc["blocks"][i - 1]["section"]
+                if method == "structure"
+                else cosine(vectors[i - 1], vectors[i]) < config["threshold"]
+            )
             if boundary or count + added > size:
                 ranges.append((start, end))
                 start, count = left, 0
             end, count = right, count + added
         ranges.append((start, end))
-    return [{"id": f"{doc['id']}:{i}", "doc_id": doc["id"], "kind": doc["kind"],
-             "start": a, "end": b, "text": text[a:b]}
-            for i, (a, b) in enumerate(ranges)]
+    return [
+        {
+            "id": f"{doc['id']}:{i}",
+            "doc_id": doc["id"],
+            "kind": doc["kind"],
+            "start": a,
+            "end": b,
+            "text": text[a:b],
+        }
+        for i, (a, b) in enumerate(ranges)
+    ]
 
 
 def covered(span: list[int], ranges: list[tuple[int, int]]) -> bool:
@@ -161,8 +189,11 @@ def score(query: dict, ranking: list[dict], k: int = 3) -> dict:
         recall = sum(covered(s, ranges) for s in query["evidence"]) / len(query["evidence"])
         if recall == 1 and reciprocal == 0:
             reciprocal = 1 / rank
-    return {"evidence_recall_at_3": recall, "complete_at_3": float(recall == 1),
-            "completion_rr_at_3": reciprocal}
+    return {
+        "evidence_recall_at_3": recall,
+        "complete_at_3": float(recall == 1),
+        "completion_rr_at_3": reciprocal,
+    }
 
 
 def rank(chunks: list[dict], vectors: list[list[float]], query: list[float]) -> list[dict]:
